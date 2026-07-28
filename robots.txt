@@ -1,0 +1,6 @@
+# السماح لكل محركات البحث بفهرسة الموقع
+User-agent: *
+Allow: /
+
+# رابط خريطة الموقع
+Sitemap: https://sawalif-sigma.vercel.app/sitemap.xml

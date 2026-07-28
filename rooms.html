@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الغرف المتاحة</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    
+    <!-- ملف الاستايل الخاص بصفحة الغرف -->
+    <link rel="stylesheet" href="css/rooms.css">
+
+    <!-- استدعاء ملف Font Awesome المحلي المباشر لضمان ظهور الأيقونات محلياً وأونلاين -->
+    <link rel="stylesheet" href="css/all.min.css">
+</head>
+<body>
+   <script>
+    (function() {
+      // ✨ فحص متزامن لحالة الحظر أولاً (له الأولوية على الطرد)، يعمل فورًا
+      // قبل رسم أي محتوى — يمنع الوميض.
+      try {
+        var banRaw = localStorage.getItem('banGuardState');
+        if (banRaw) {
+          var banState = JSON.parse(banRaw);
+          if (banState && banState.isBanned) {
+            document.documentElement.style.overflow = 'hidden';
+
+            var banStyle = document.createElement('style');
+            banStyle.id = 'ban-screen-style';
+            banStyle.textContent = '#banScreenOverlay{position:fixed;inset:0;background:#000;z-index:2147483647;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;}#banScreenOverlay .ban-screen-icon{width:96px;height:96px;margin-bottom:24px;}#banScreenOverlay .ban-screen-title{color:#fff;font-size:30px;font-weight:700;margin:0 0 12px;font-family:inherit;}#banScreenOverlay .ban-screen-subtitle{color:#9ca3af;font-size:16px;margin:0;font-family:inherit;direction:rtl;}';
+            document.head.appendChild(banStyle);
+
+            var banOverlay = document.createElement('div');
+            banOverlay.id = 'banScreenOverlay';
+            banOverlay.innerHTML = '<svg class="ban-screen-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#e11d48" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2Zm0 2c1.85 0 3.55.607 4.929 1.636L5.636 16.93A7.96 7.96 0 0 1 4 12c0-4.418 3.582-8 8-8Zm0 16c-1.85 0-3.55-.607-4.929-1.636L18.364 7.07A7.96 7.96 0 0 1 20 12c0 4.418-3.582 8-8 8Z"/></svg><p class="ban-screen-title">محظور</p><p class="ban-screen-subtitle">لا يمكنك الدخول إلى الدردشة حتى يتم فك الحظر عنك</p>';
+            document.body.appendChild(banOverlay);
+            document.body.style.overflow = 'hidden';
+
+            // محظور: لا تكمل منطق التوجيه التلقائي أدناه إطلاقًا
+            return;
+          }
+        }
+      } catch (e) { /* تجاهل أخطاء التخزين المحلي */ }
+
+      // ✨ فحص متزامن (وليس async) لحالة الطرد من كاش localStorage، يعمل فورًا
+      // قبل أي رسم لمحتوى الصفحة — هذا هو ما يمنع "الوميض" الذي كان يظهر فيه
+      // محتوى الدردشة للحظة قبل ظهور شاشة الطرد. المصدر الحقيقي للبيانات
+      // يبقى Firestore عبر kick-guard.js الذي يعمل لاحقًا ويؤكد/يصحّح الحالة.
+      try {
+        var raw = localStorage.getItem('kickGuardState');
+        if (raw) {
+          var state = JSON.parse(raw);
+          var isPermanent = state && state.kickedUntil === 'permanent';
+          var isValid = state && state.isKicked && (isPermanent || (typeof state.kickedUntil === 'number' && state.kickedUntil > Date.now()));
+          if (isValid) {
+            document.documentElement.style.overflow = 'hidden';
+
+            var style = document.createElement('style');
+            style.id = 'kick-screen-style';
+            style.textContent = '#kickScreenOverlay{position:fixed;inset:0;background:#000;z-index:2147483647;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;}#kickScreenOverlay .kick-screen-icon{width:96px;height:96px;margin-bottom:24px;}#kickScreenOverlay .kick-screen-title{color:#fff;font-size:28px;font-weight:700;margin:0 0 14px;font-family:inherit;}#kickScreenOverlay .kick-screen-remaining{color:#9ca3af;font-size:16px;margin:0;font-family:inherit;direction:rtl;}';
+            document.head.appendChild(style);
+
+            var overlay = document.createElement('div');
+            overlay.id = 'kickScreenOverlay';
+            overlay.innerHTML = '<svg class="kick-screen-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#e11d48" d="M5 20q-.825 0-1.412-.587Q3 18.825 3 18V8q0-.825.588-1.413Q4.175 6 5 6h14q.825 0 1.413.587Q21 7.175 21 8v10q0 .825-.587 1.413Q19.825 20 19 20Zm7-7Zm-1-4q-.425 0-.712.288Q10 9.575 10 10v4q0 .425.288.712.287.288.712.288.425 0 .713-.288Q12 14.425 12 14v-4q0-.425-.287-.712Q11.425 9 11 9Zm0 0h2v4h-2Zm-5 7h14V8H5Zm2-9h10V8H7Z"/></svg><p class="kick-screen-title">تم طردك</p><p class="kick-screen-remaining" id="kickRemainingText">' + (isPermanent ? 'الطرد دائم' : 'جارٍ التحقق...') + '</p>';
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+
+            // مطرود: لا تكمل منطق التوجيه التلقائي للغرفة/الدخول أدناه إطلاقًا
+            return;
+          }
+        }
+      } catch (e) { /* تجاهل أخطاء التخزين المحلي */ }
+
+      if (!localStorage.getItem('chatUserId')) {
+        window.location.href = 'index.html';
+        return;
+      }
+      const lastVisitedRoomId = localStorage.getItem('lastVisitedRoomId');
+      if (lastVisitedRoomId) {
+          window.location.href = `chat.html?roomId=${lastVisitedRoomId}`;
+      }
+    })();
+    </script>
+    <script>
+    // ✨ نفس فكرة chat.html: نطبّق صلاحية إظهار زر "إضافة غرفة" هنا فورًا
+    // وقبل رسم الزر أصلاً (بقراءة القيمة الجاهزة chatUserPermissions التي
+    // حُسبت مرة واحدة عند الدخول)، بدل ما تنتظر rooms.js (يشتغل بعد تحليل
+    // الصفحة) فيظهر الزر لحظة لكل الرتب ثم يختفي — وهذا هو الوميض.
+    try {
+      var roomsPerms = JSON.parse(localStorage.getItem('chatUserPermissions') || '{}');
+      document.documentElement.dataset.canAddRoom = roomsPerms.canAddRoom ? '1' : '0';
+    } catch (e) {
+      document.documentElement.dataset.canAddRoom = '0';
+    }
+    </script>
+    <script>
+    // ✨ صمّام أمان فقط: لو صار خطأ غير متوقع بالجافاسكربت قبل ما يوصل
+    // لسطر إظهار الصفحة الطبيعي في rooms.js، هذا يضمن إنها ما تضل بيضاء للأبد.
+    setTimeout(() => document.body.classList.add('page-ready'), 4000);
+    </script>
+    <div class="header-bar">
+        <div class="profile-icon">
+            <img id="userProfilePic" src="" alt="صورة المستخدم">
+        </div>
+        <div class="chat-icon">
+            <i class="fas fa-comments"></i>
+        </div>
+    </div>
+    <div class="user-modal" id="userModal">
+        <div class="modal-header">
+            <div class="modal-profile">
+                <img id="modalProfilePic" src="" alt="صورة المستخدم">
+                <h4 id="modalUserName"></h4>
+            </div>
+            <div id="modalUserRank" class="user-rank"></div>
+        </div>
+        <button id="logoutBtn" class="logout-btn">تسجيل الخروج</button>
+    </div>
+    <div class="add-room-bar">
+        <button class="add-room-btn floating-add-btn" id="addRoomBtn" title="إضافة غرفة">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+    <div class="main-content">
+        <div class="search-box">
+            <input type="text" id="roomSearch" placeholder="بحث">
+            <i class="fas fa-search"></i>
+        </div>
+        <div class="room-list" id="room-list">
+        </div>
+    </div>
+    <div class="modal" id="addRoomModal">
+        <div class="modal-content">
+            <span class="close" id="closeAddRoom">&times;</span>
+            <h3>إضافة غرفة جديدة</h3>
+            <form id="addRoomForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="roomName">اسم الغرفة</label>
+                    <input type="text" id="roomName" name="roomName" required maxlength="40">
+                </div>
+                <div class="form-group">
+                    <label for="roomDesc">وصف الغرفة</label>
+                    <textarea id="roomDesc" name="roomDesc" rows="2" maxlength="100"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>صورة الغرفة (اختياري)</label>
+                    <input type="file" id="roomImageFile" accept="image/*">
+                    <div id="roomImagePreview" class="image-preview"></div>
+                    <div id="imageUploadProgress" class="upload-progress"></div>
+                </div>
+                <div class="form-row">
+                    <label>
+                        <input type="checkbox" id="roomLocked" name="roomLocked">
+                        مغلقة (تحتاج إذن للدخول)
+                    </label>
+                    <label>
+                        <input type="checkbox" id="roomAdminOnly" name="roomAdminOnly">
+                        للمشرفين فقط
+                    </label>
+                </div>
+                <div class="form-group" id="roomPasswordGroup" style="display:none;">
+                    <label for="roomPassword">كلمة مرور الغرفة</label>
+                    <input type="password" id="roomPassword" name="roomPassword" maxlength="40" autocomplete="new-password" placeholder="أدخل كلمة المرور للغرفة">
+                </div>
+                <button type="submit" class="submit-btn">إضافة</button>
+            </form>
+            <div id="addRoomMsg" class="modal-msg"></div>
+        </div>
+    </div>
+    <div class="modal" id="passwordModal">
+        <div class="modal-content password-modal-content">
+            <span class="close" id="closePasswordModal">&times;</span>
+            <h4 style="margin-bottom:15px;color:#7c3aed;">الغرفة مغلقة</h4>
+            <form id="roomPasswordForm" autocomplete="off">
+                <div class="form-group" style="margin-bottom:10px;">
+                    <label for="enterRoomPassword">أدخل كلمة المرور للغرفة</label>
+                    <input type="password" id="enterRoomPassword" name="enterRoomPassword" maxlength="40" autocomplete="current-password" placeholder="كلمة المرور" required>
+                </div>
+                <button type="submit" class="submit-btn">دخول</button>
+            </form>
+            <div id="passwordModalMsg" class="modal-msg"></div>
+        </div>
+    </div>
+    <script>window.__API_BASE__="http://localhost:4000";window.__SOCKET_BASE__="http://localhost:4000";</script>
+    <script type="module" src="js/rooms.js"></script>
+</body>
+</html>

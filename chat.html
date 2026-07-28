@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>سوالف VIP</title>
+  <meta name="description" content="سوالف VIP - دردشة مجانية وأصدقاء ممتعين.">
+  <meta name="keywords" content="شات, دردشة, سوالف VIP, سوالف, أصدقاء">
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <script>window.__API_BASE__="http://localhost:4000";window.__SOCKET_BASE__="http://localhost:4000";</script>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+
+  <!-- ملف الاستايل الرئيسي الخاص بك -->
+  <link rel="stylesheet" href="css/combined.min.css" />
+
+  <!-- استدعاء ملف Font Awesome المحلي المباشر بعد استايل الموقع لضمان أولوية الأيقونات -->
+  <link rel="stylesheet" href="css/all.min.css" />
+</head>
+<body>
+  <script>
+(function() {
+  // ✨ فحص متزامن لحالة الحظر من الكاش أولاً (له الأولوية على الطرد)، يعمل
+  // فورًا قبل رسم أي محتوى — يمنع الوميض. المصدر الحقيقي يبقى Firestore
+  // عبر ban-guard.js الذي يعمل لاحقًا ويؤكد/يصحّح الحالة.
+  try {
+    var banRaw = localStorage.getItem('banGuardState');
+    if (banRaw) {
+      var banState = JSON.parse(banRaw);
+      if (banState && banState.isBanned) {
+        document.documentElement.style.overflow = 'hidden';
+
+        var banStyle = document.createElement('style');
+        banStyle.id = 'ban-screen-style';
+        banStyle.textContent = '#banScreenOverlay{position:fixed;inset:0;background:#000;z-index:2147483647;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;}#banScreenOverlay .ban-screen-icon{width:96px;height:96px;margin-bottom:24px;}#banScreenOverlay .ban-screen-title{color:#fff;font-size:30px;font-weight:700;margin:0 0 12px;font-family:inherit;}#banScreenOverlay .ban-screen-subtitle{color:#9ca3af;font-size:16px;margin:0;font-family:inherit;direction:rtl;}';
+        document.head.appendChild(banStyle);
+
+        var banOverlay = document.createElement('div');
+        banOverlay.id = 'banScreenOverlay';
+        banOverlay.innerHTML = '<svg class="ban-screen-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#e11d48" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2Zm0 2c1.85 0 3.55.607 4.929 1.636L5.636 16.93A7.96 7.96 0 0 1 4 12c0-4.418 3.582-8 8-8Zm0 16c-1.85 0-3.55-.607-4.929-1.636L18.364 7.07A7.96 7.96 0 0 1 20 12c0 4.418-3.582 8-8 8Z"/></svg><p class="ban-screen-title">محظور</p><p class="ban-screen-subtitle">لا يمكنك الدخول إلى الدردشة حتى يتم فك الحظر عنك</p>';
+        document.body.appendChild(banOverlay);
+        document.body.style.overflow = 'hidden';
+        return;
+      }
+    }
+  } catch (e) {}
+
+  // فحص متزامن لحالة الطرد من الكاش، يعمل فورًا قبل رسم أي محتوى — يمنع الوميض
+  try {
+    var raw = localStorage.getItem('kickGuardState');
+    if (raw) {
+      var state = JSON.parse(raw);
+      var isPermanent = state && state.kickedUntil === 'permanent';
+      var isValid = state && state.isKicked && (isPermanent || (typeof state.kickedUntil === 'number' && state.kickedUntil > Date.now()));
+      if (isValid) {
+        document.documentElement.style.overflow = 'hidden';
+
+        var style = document.createElement('style');
+        style.id = 'kick-screen-style';
+        style.textContent = '#kickScreenOverlay{position:fixed;inset:0;background:#000;z-index:2147483647;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;}#kickScreenOverlay .kick-screen-icon{width:96px;height:96px;margin-bottom:24px;}#kickScreenOverlay .kick-screen-title{color:#fff;font-size:28px;font-weight:700;margin:0 0 14px;font-family:inherit;}#kickScreenOverlay .kick-screen-remaining{color:#9ca3af;font-size:16px;margin:0;font-family:inherit;direction:rtl;}';
+        document.head.appendChild(style);
+
+        var overlay = document.createElement('div');
+        overlay.id = 'kickScreenOverlay';
+        overlay.innerHTML = '<svg class="kick-screen-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#e11d48" d="M5 20q-.825 0-1.412-.587Q3 18.825 3 18V8q0-.825.588-1.413Q4.175 6 5 6h14q.825 0 1.413.587Q21 7.175 21 8v10q0 .825-.587 1.413Q19.825 20 19 20Zm7-7Zm-1-4q-.425 0-.712.288Q10 9.575 10 10v4q0 .425.288.712.287.288.712.288.425 0 .713-.288Q12 14.425 12 14v-4q0-.425-.287-.712Q11.425 9 11 9Zm0 0h2v4h-2Zm-5 7h14V8H5Zm2-9h10V8H7Z"/></svg><p class="kick-screen-title">تم طردك</p><p class="kick-screen-remaining" id="kickRemainingText">' + (isPermanent ? 'الطرد دائم' : 'جارٍ التحقق...') + '</p>';
+        document.body.appendChild(overlay);
+        document.body.style.overflow = 'hidden';
+      }
+    }
+  } catch (e) {}
+})();
+  </script>
+  <!-- تأجيل تحميل Algolia (defer) حتى لا يوقف عرض الصفحة -->
+  <script defer src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+
+  <script>
+  if (!localStorage.getItem('chatUserId')) {
+    window.location.href = 'index.html';
+  }
+  if (!new URLSearchParams(window.location.search).get('roomId') && !localStorage.getItem('lastVisitedRoomId')) {
+    window.location.href = 'rooms.html';
+  }
+</script>
+  <script>
+  // ✨ نقرأ فقط الصلاحيات الجاهزة (chatUserPermissions) اللي تم حسابها مرة واحدة
+  // عند الدخول من صفحة التسجيل (script.js) — ما فيه أي فحص رتبة هنا، فقط قراءة
+  // حتى تظهر الأزرار من أول رسم للصفحة بدون أي وميض.
+  try {
+    var chatPerms = JSON.parse(localStorage.getItem('chatUserPermissions') || '{}');
+    document.documentElement.dataset.canPrivate = chatPerms.canSeePrivateChatButton ? '1' : '0';
+    document.documentElement.dataset.canReport = chatPerms.canSeeReportButton ? '1' : '0';
+  } catch (e) {
+    document.documentElement.dataset.canPrivate = '0';
+    document.documentElement.dataset.canReport = '0';
+  }
+</script>
+
+  <div id="top-bar">
+    <div class="top-bar">
+      <div class="top-buttons">
+        <div class="profile" id="profileButton">
+          <img id="user-profile-image" alt="user" style="display:none;">
+        </div>
+        <div class="btn report" id="reportButton">
+            <i class="fas fa-exclamation-circle"></i><br>إبلاغ
+        </div>
+        <div class="btn notify head_option4" id="notifications-btn">
+            <i class="fas fa-bell"></i>
+            <span id="notifications-badge" class="badge"></span>
+            <br>إشعار
+        </div>
+        <div class="btn online head_option3" id="online-users-btn">
+            <i class="fas fa-users"></i><br>متصلين
+        </div>
+        <div class="btn private head_option1" id="privateButton">
+            <i class="fas fa-envelope"></i><br>خاص
+        </div>
+        <div class="btn friend head_option5" id="friend-btn">
+            <i class="fas fa-user-plus"></i>
+            <span id="friend-badge" class="badge"></span>
+            <br>صداقة
+        </div>
+        <div class="btn refresh head_option8">
+            <i class="fas fa-sync-alt"></i><br>تحديث
+        </div>
+        <div class="btn menu head_option6">
+            <i class="fas fa-bars"></i><br>قائمة
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-container">
+      <div id="chat-box">
+        <div class="chat-box"></div>
+      </div>
+  </div>
+
+  <div id="input-bar">
+    <div class="chat-input-wrapper">
+        <div id="normal-chat-input" class="input-bar">
+            <button class="btn icon-btn send-btn"><i class="fas fa-paper-plane"></i></button>
+            <div class="input-field-container">
+                <input type="text" id="message-input" placeholder="اكتب هنا..." />
+                <input type="file" id="image-upload-input" style="display: none;" />
+            </div>
+            <button class="btn icon-btn emoji-btn-circle"><i class="far fa-face-smile"></i></button>
+            <div class="plus-button-container">
+                <button class="btn icon-btn plus-btn-circle" id="plus-btn-toggle">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="muted-message-container" class="muted-message-container">
+            <span>الدردشة مقفلة</span>
+        </div>
+    </div>
+  </div>
+
+  <div id="bottom-bar">
+    <div class="bottom-bar">
+        <div class="bottom-buttons-container">
+            <button class="btn bottom-btn rooms-btn">
+                <i class="fas fa-house"></i>
+                <span>الغرف</span>
+            </button>
+            <button class="btn bottom-btn news-btn">
+                <i class="fas fa-newspaper"></i>
+                <span>الأخبار</span>
+            </button>
+            <button class="btn bottom-btn diary-btn">
+                <i class="fas fa-book-open"></i>
+                <span>اليوميات</span>
+            </button>
+            <button class="btn bottom-btn private-btn">
+                <i class="fas fa-lock"></i>
+                <span>الخاص</span>
+            </button>
+        </div>
+    </div>
+  </div>
+
+    <script type="module" src="js/modals.js"></script>
+    <script type="module" src="js/extra-modals.js"></script> 
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

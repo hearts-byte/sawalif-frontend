@@ -1,0 +1,11 @@
+# ملفات حساسة - مفاتيح Firebase Admin وأي بيانات اعتماد
+mnshn/*.json
+**/*firebase-adminsdk*.json
+**/*serviceAccount*.json
+
+# تبعيات
+node_modules/
+
+# ملفات النظام
+.DS_Store
+Thumbs.db
