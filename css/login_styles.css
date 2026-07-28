@@ -1,0 +1,560 @@
+/*
+ * ملف التنسيقات (CSS) المحدث
+ * تصميم عصري وأنيق لشات القلوب الراقية
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+
+/* ================== الأساسيات ================== */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Tajawal', sans-serif;
+    color: #333;
+    overflow: hidden; /* لمنع أي تمرير في الصفحة بأكملها */
+    background-color: #f0f2f5;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1920&h=1080');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.9) grayscale(20%);
+    z-index: -1;
+}
+
+/* ================== الغلاف الرئيسي (Container Wrapper) ================== */
+.container-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* ================== الحاوية الرئيسية ================== */
+/* ================== الحاوية الرئيسية ================== */
+.container {
+    width: 100%;
+    max-width: 700px; /* تم زيادة القيمة لتقليل المساحة البيضاء على الجوانب */
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    padding: 15px; /* تم تقليل القيمة لتقريب المحتوى من الحواف */
+    box-sizing: border-box;
+    max-height: 85vh; 
+}
+
+
+/* ================== رأس الصفحة ================== */
+.header {
+    background: #6a1b9a;
+    background: linear-gradient(45deg, #6a1b9a, #d81b60);
+    color: white;
+    padding: 20px 25px;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.header:hover {
+    transform: translateY(-5px);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 700;
+    margin-left: 10px;
+    letter-spacing: 1px;
+}
+
+.logo::before {
+    content: '💖';
+    font-size: 24px;
+    margin-left: 10px;
+    vertical-align: middle;
+    animation: heartBeat 1.5s infinite;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* ================== الأزرار ================== */
+.buttons {
+    padding: 0 10px;
+}
+
+.button {
+    width: 100%;
+    padding: 18px;
+    margin-bottom: 18px;
+    border: none;
+    border-radius: 12px;
+    font-size: 19px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.button i {
+    margin-left: 10px;
+    font-size: 24px;
+}
+
+.visitor-login {
+    background: linear-gradient(45deg, #8E24AA, #7B1FA2);
+}
+
+.register-now {
+    background: linear-gradient(45deg, #4CAF50, #66BB6A);
+}
+
+.member-login {
+    background: linear-gradient(45deg, #FF7043, #F4511E);
+}
+
+/* ================== مربع التنبيه ================== */
+.warning-box {
+    background-color: rgba(255, 253, 231, 0.9);
+    border: 1px solid #FFECB3;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 0 10px 20px 10px;
+    display: flex;
+    align-items: flex-start;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #444;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.warning-icon {
+    color: #FFC107;
+    font-size: 28px;
+    margin-left: 12px;
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* ================== الأيقونات والروابط ================== */
+.contact-us {
+    padding: 0 10px;
+}
+
+.contact-button {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background-color: #f0f4f8;
+    font-size: 16px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.contact-button:hover {
+    background-color: #e3e9f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.contact-button i {
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+.terms-agreement {
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+    padding: 0 20px;
+    margin-top: 25px;
+    line-height: 1.6;
+}
+
+.terms-agreement a {
+    color: #6a1b9a;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.terms-agreement a:hover {
+    color: #d81b60;
+    text-decoration: underline;
+}
+
+/* ================== النوافذ المنبثقة (Modals) ================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px 35px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    direction: rtl;
+    text-align: right;
+    box-sizing: border-box;
+    transform: scale(0.9);
+    animation: modalShow 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
+@keyframes modalShow {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.close-button {
+    color: #aaa;
+    font-size: 35px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.close-button:hover {
+    color: #f44336;
+    transform: rotate(90deg);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #555;
+    font-size: 16px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 15px 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #6a1b9a;
+    outline: none;
+    box-shadow: 0 0 8px rgba(106, 27, 154, 0.2);
+    background-color: #fff;
+}
+
+.submit-modal-button {
+    background: linear-gradient(45deg, #4CAF50, #66BB6A);
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.25);
+    transition: all 0.3s ease;
+}
+
+.submit-modal-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
+}
+
+/* ================== رسالة التنبيه ================== */
+.alert-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 90%;
+    padding: 15px 25px;
+    border-radius: 12px;
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.alert-message.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.alert-message.success {
+    background: rgba(76, 175, 80, 0.9);
+}
+.alert-message.info {
+    background: rgba(33, 150, 243, 0.9);
+}
+
+/* ================== التوافق مع الشاشات ================== */
+/* ================== التوافق مع الشاشات ================== */
+@media (max-width: 768px) {
+    .container {
+        border-radius: 0;
+        min-height: 100vh;
+        box-shadow: none;
+        padding: 10px; /* تم تقليل المسافة الداخلية */
+        max-width: 100%;
+        max-height: none;
+        overflow-y: hidden;
+    }
+
+/* For small screens (phones in portrait) */
+
+
+    .header {
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    .logo::before {
+        font-size: 20px;
+    }
+
+    .button {
+        padding: 15px;
+        font-size: 17px;
+        border-radius: 10px;
+    }
+    
+    .button i {
+        font-size: 22px;
+    }
+
+    .warning-box {
+        margin: 0 0 15px 0;
+        padding: 15px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .warning-icon {
+        font-size: 24px;
+    }
+
+    .contact-button {
+        padding: 12px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+
+    .contact-button i {
+        font-size: 18px;
+    }
+    
+    .terms-agreement {
+        font-size: 13px;
+        padding: 0 10px;
+    }
+
+    .modal-content {
+        padding: 25px 25px;
+        border-radius: 15px;
+        max-width: 95%;
+    }
+
+    .modal-content h2 {
+        font-size: 24px;
+    }
+
+    .close-button {
+        font-size: 30px;
+    }
+
+    .form-group label {
+        font-size: 15px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 12px;
+        font-size: 15px;
+        border-radius: 8px;
+    }
+
+    .submit-modal-button {
+        padding: 12px 20px;
+        font-size: 17px;
+        border-radius: 10px;
+    }
+}
+
+/* For small screens (phones in portrait) */
+@media (max-width: 480px) {
+    .container {
+        padding: 5px;
+    }
+    
+    .header {
+        padding: 10px 15px;
+        margin-bottom: 10px;
+    }
+    
+    .logo {
+        font-size: 20px;
+    }
+    
+    .buttons {
+        padding: 0 5px;
+    }
+
+    .button {
+        padding: 13px;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .button i {
+        font-size: 20px;
+    }
+    
+    .warning-box {
+        margin: 0 5px 10px 5px;
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .warning-icon {
+        font-size: 22px;
+    }
+
+    .contact-us {
+        padding: 0 5px;
+    }
+
+    .contact-button {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .contact-button i {
+        font-size: 16px;
+    }
+    
+    .terms-agreement {
+        font-size: 12px;
+        padding: 0 5px;
+    }
+    
+    .modal-content {
+        padding: 20px;
+        max-width: 98%;
+    }
+    
+    .modal-content h2 {
+        font-size: 20px;
+    }
+    
+    .close-button {
+        font-size: 26px;
+    }
+    
+    .form-group label {
+        font-size: 14px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .submit-modal-button {
+        padding: 10px 15px;
+        font-size: 16px;
+    }
+}

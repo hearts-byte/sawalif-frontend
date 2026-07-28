@@ -1,0 +1,561 @@
+/*
+ * ملف التنسيقات (CSS) المُحدث
+ * تصميم "الفجر المشرق"
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+
+/* ================== الأساسيات ================== */
+body {
+    background-color: #ffffff;
+    font-family: 'Tajawal', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+    overflow-x: hidden;
+    color: #444; /* لون نص داكن للخلفية الفاتحة */
+}
+
+/* ================== تحميل طبيعي بدون شاشة تحميل ================== */
+/* الصفحة تبقى غير مرئية (بدون أي مؤشر تحميل) لحظات قليلة جدًا لين تجهز
+   الغرف وتترسم، وبعدها تظهر كاملة دفعة وحدة (body.page-ready). هذا يمنع
+   ظهور الصفحة فاضية ثم "قفز" الغرف فوقها، بدون إضافة أي واجهة تحميل. */
+body {
+    opacity: 0;
+}
+
+body.page-ready {
+    opacity: 1;
+    transition: opacity 0.15s ease;
+}
+
+/* ================== الشريط العلوي ================== */
+.header-bar {
+    background: linear-gradient(to right, #6a1b9a, #8e24aa);
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.chat-icon {
+    color: #fff;
+    font-size: 42px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.chat-icon:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.profile-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.profile-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 5px #ffc107;
+}
+
+.profile-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ================== مودال المستخدم ================== */
+.user-modal {
+    display: none; /* مخفي بشكل افتراضي */
+    position: absolute;
+    top: 60px; /* يظهر أسفل الشريط العلوي */
+    right: 15px;
+    width: 150px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    z-index: 200;
+    padding: 20px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.user-modal.show {
+    display: block;
+}
+
+.modal-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #7c3aed;
+    margin-bottom: 10px;
+}
+
+.modal-profile h4 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #2c3e50;
+}
+
+.user-rank {
+    background: #f0f2f5;
+    color: #7c3aed;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.logout-btn {
+    width: 100%;
+    background: #d32f2f;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 0;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #c62828;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================== الأزرار الرئيسية ================== */
+.add-room-bar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 25px 0 0 0;
+    padding: 0 25px;
+    box-sizing: border-box;
+}
+
+.add-room-btn {
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 2.2em;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    /* ✨ مخفي افتراضيًا لمنع وميض ظهوره لكل الرتب قبل ما يشتغل rooms.js.
+       يظهر فقط لو html[data-can-add-room="1"] أدناه (مطبّقة من سكربت مبكر
+       بأول rooms.html، قبل رسم هذا الزر أصلاً). */
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+html[data-can-add-room="1"] .add-room-btn {
+    display: flex;
+}
+
+.add-room-btn:hover {
+    transform: scale(1.1) rotate(90deg);
+    background: #5CB85C;
+}
+
+/* ================== المحتوى الرئيسي ================== */
+.main-content {
+    padding: 0 0 30px 0;
+}
+
+.search-box {
+    background: #fff;
+    margin: 20px 25px;
+    border-radius: 30px;
+    padding: 15px 25px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    position: relative;
+    border: 1px solid #ddd;
+}
+
+.search-box input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 1.1em;
+    color: #555;
+    padding: 8px 0;
+    font-family: 'Tajawal', sans-serif;
+}
+
+.search-box input::placeholder {
+    color: #999;
+}
+
+.search-box i {
+    position: absolute;
+    left: 20px;
+    color: #ccc;
+    font-size: 22px;
+    pointer-events: none;
+}
+
+/* ================== قائمة الغرف ================== */
+.room-list {
+    margin: 0 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.room-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.room-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #eee;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.room-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.room-details {
+    flex-grow: 1;
+}
+
+.room-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.room-desc {
+    font-size: 1em;
+    color: #777;
+    margin-bottom: 7px;
+    line-height: 1.5;
+    max-width: 260px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.room-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.room-icon-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #f0f2f5;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 0.95em;
+    color: #7c3aed;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.room-icon-group i {
+    margin-left: 3px;
+    font-size: 0.9em;
+}
+
+.room-card .room-lock {
+    color: #ffc107;
+}
+
+.room-card .room-admin {
+    color: #d4af37;
+}
+
+/* ================== المودال (النافذة المنبثقة) ================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    max-width: 450px;
+    width: 90vw;
+    position: relative;
+    text-align: right;
+    box-sizing: border-box;
+    max-height: 95vh;
+    overflow-y: auto;
+    animation: modalScaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes modalScaleIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.password-modal-content {
+    max-width: 350px;
+    padding: 30px;
+}
+
+.modal-content h3, .modal-content h4 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #7c3aed;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2em;
+    color: #999;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: transform 0.3s ease;
+}
+
+.close:hover {
+    transform: rotate(180deg);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+    border: none;
+    border-radius: 15px;
+    padding: 12px 15px;
+    font-size: 1em;
+    background-color: #f0f2f5;
+    color: #333;
+    outline: none;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 5px #7c3aed;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.form-row label {
+    font-size: 0.95em;
+    color: #555;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.submit-btn {
+    width: 100%;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+}
+
+.modal-msg {
+    margin-top: 15px;
+    font-size: 1em;
+    text-align: center;
+    color: #d32f2f;
+}
+
+.image-preview {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 120px;
+    max-height: 120px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.upload-progress {
+    color: #7c3aed;
+    font-size: 0.9em;
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* ================== التوافق مع الشاشات الصغيرة ================== */
+@media (max-width: 600px) {
+    .header-bar {
+        height: 65px;
+        padding: 0 15px;
+    }
+    .profile-icon {
+        width: 50px;
+        height: 50px;
+    }
+    .add-room-bar {
+        padding: 0 15px;
+        margin-top: 20px;
+    }
+    .add-room-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 2em;
+    }
+    .search-box {
+        margin: 15px 15px 20px 15px;
+    }
+    .room-list {
+        margin: 0 15px;
+        gap: 15px;
+    }
+    .room-card {
+        padding: 15px;
+        gap: 15px;
+    }
+    .room-avatar {
+        width: 60px;
+        height: 60px;
+    }
+    .room-title {
+        font-size: 1.1em;
+    }
+    .room-desc {
+        max-width: 150px;
+        font-size: 0.9em;
+    }
+    .room-icon-group {
+        padding: 4px 8px;
+        font-size: 0.85em;
+    }
+    .modal-content {
+        padding: 25px;
+    }
+    .modal-content h3 {
+        font-size: 1.3em;
+        margin-bottom: 20px;
+    }
+    .close {
+        font-size: 1.8em;
+    }
+    .form-group input,
+    .form-group textarea,
+    .submit-btn {
+        font-size: 1em;
+    }
+    .form-group input,
+    .form-group textarea {
+        border-radius: 12px;
+    }
+    .submit-btn {
+        border-radius: 12px;
+    }
+}
